@@ -1,4 +1,4 @@
-/*
+
 package com.proacscent.demo.configuration;
 
 import org.springframework.core.Ordered;
@@ -11,24 +11,23 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.nio.file.attribute.FileAttribute;
 
-@Component
-@Order(Ordered.HIGHEST_PRECEDENCE)
+@Configuration
 public class CORSFilter implements Filter {
-    @Override
-    public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
-
-
-        System.out.println("Disabling CORS");
-        HttpServletRequest request = (HttpServletRequest) servletRequest;
-        HttpServletResponse response = (HttpServletResponse) servletResponse;
-
-        response.setHeader("Access-Control-Allow-Origin","http://localhost:8100");
-        response.setHeader("Access-Control-Allow-Credentials", "true");
-        response.setHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS, DELETE");
-        response.setHeader("Access-Control-Max-Age", "3600");
-        response.setHeader("Access-Control-Allow-Headers", "X-Requested-With, Content-Type, Authorization, Origin, Accept, Access-Control-Request-Method, Access-Control-Request-Headers");
-
-        filterChain.doFilter(servletRequest, servletResponse);
+    @Bean
+    public CorsFilter corsFilter() {
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        CorsConfiguration config = new CorsConfiguration();
+        config.setAllowCredentials(true);
+        config.addAllowedOrigin("*");
+        config.addAllowedHeader("*");
+        config.addExposedHeader("Authorization");
+        config.addAllowedMethod("OPTIONS");
+        config.addAllowedMethod("GET");
+        config.addAllowedMethod("POST");
+        config.addAllowedMethod("PUT");
+        config.addAllowedMethod("DELETE");
+        config.addExposedHeader("role");
+        source.registerCorsConfiguration("/**", config);
+        return new CorsFilter(source);
     }
 }
-*/
